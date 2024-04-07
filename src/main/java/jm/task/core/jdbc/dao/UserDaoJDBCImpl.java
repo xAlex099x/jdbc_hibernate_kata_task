@@ -108,11 +108,14 @@ public class UserDaoJDBCImpl implements UserDao {
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_SQL)) {
 
             ResultSet result = preparedStatement.executeQuery();
+            int counter = 0;
             while (result.next()) {
                 list.add(new User(
                         result.getString("name"),
                         result.getString("lastname"),
                         result.getByte("age")));
+                list.get(counter).setId(result.getLong("id"));
+                counter++;
             }
             return list;
         } catch (SQLException e) {
