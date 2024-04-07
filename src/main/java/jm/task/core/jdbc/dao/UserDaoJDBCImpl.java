@@ -6,7 +6,6 @@ import jm.task.core.jdbc.util.Util;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,7 +18,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     private static final String CREATE_TABLE_SQL = """
             CREATE TABLE user (
-            id INT AUTO_INCREMENT PRIMARY KEY ,
+            id BIGINT AUTO_INCREMENT PRIMARY KEY ,
             name VARCHAR(128) NOT NULL ,
             lastname VARCHAR(128) NOT NULL ,
             age TINYINT CHECK ( age > 0 ));
