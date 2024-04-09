@@ -3,6 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +15,9 @@ import java.util.logging.Logger;
 public class UserDaoJDBCImpl implements UserDao {
 
     private final static UserDao INSTANCE;
-    Logger LOGGER = Logger.getLogger("DAO LOGGER");
 
+    private static Logger LOGGER = Logger.getLogger("DAO LOGGER");
+    private Connection connection = Util.open();
     private static final String CREATE_TABLE_SQL = """
             CREATE TABLE user (
             id BIGINT AUTO_INCREMENT PRIMARY KEY ,
@@ -59,8 +61,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        try (var connection = Util.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE_SQL)) {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -69,8 +70,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try (var connection = Util.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE_SQL)) {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -79,8 +79,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (var connection = Util.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setInt(3, age);
@@ -92,8 +91,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try (var connection = Util.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_ID_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
 
             preparedStatement.executeUpdate();
@@ -104,8 +102,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        try (var connection = Util.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_SQL)) {
 
             ResultSet result = preparedStatement.executeQuery();
             int counter = 0;
@@ -124,8 +121,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        try (var connection = Util.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(CLEAN_TABLE_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CLEAN_TABLE_SQL)) {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
